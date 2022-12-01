@@ -3,7 +3,7 @@
  * Question name - Reverse the array in geeks for geeks
 */
 
-package Array;
+// package Array;
 
 public class ReverseTheArray {
     public static void main(String args[]){
