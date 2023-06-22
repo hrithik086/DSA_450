@@ -1,5 +1,6 @@
 /*
  * question link - https://practice.geeksforgeeks.org/problems/merge-two-sorted-arrays-1587115620/1?utm_source=gfg&utm_medium=article&utm_campaign=bottom_sticky_on_article
+ * Explanation video - https://www.youtube.com/watch?v=mF3ofENSeg8&ab_channel=PrakashShukla
  */
 
 import java.util.Arrays;
