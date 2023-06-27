@@ -1,5 +1,6 @@
 /*
  * question link - https://leetcode.com/problems/next-permutation/description/
+ * explanation video link - https://www.youtube.com/watch?v=TOvWyFT0xCw&ab_channel=Yogesh%26Shailesh%28CodeLibrary%29
  */
 
 import java.util.Arrays;
@@ -14,7 +15,6 @@ public class NextPermutation {
 
     public void nextPermutation(int[] nums) {
         int imbalanceIndex;
-        int swappedIndex;
         boolean isNextProbablityFound=false;
 
         //iterate from back and search for index where value in that index is less than its right index's value
@@ -22,15 +22,12 @@ public class NextPermutation {
             if(nums[i]>nums[i-1]){
                 imbalanceIndex=i-1;
 
-                //sort the right sub array
-                this.sortRightSubarray(nums, imbalanceIndex);
+                //check for smallest value in right subarray which is greater than value at imbalanceIndex
+                //then swap the element
+                this.swapValueGreaterThanGivenValue(nums, imbalanceIndex);
 
-                //search for an element from the right subarray from imbalanceIndex position which is just greater that value at imbalanceIndex
-                //and then swap
-                swappedIndex=this.swapValueGreaterThanGivenValue(nums, imbalanceIndex);
-
-                //balance the array as the sorted right subrray array got swapped by one element
-                this.balanceRightSubarray(nums,imbalanceIndex,swappedIndex);
+                //sort the right array in ascending order
+                sortRightSubarray(nums, imbalanceIndex);
 
                 isNextProbablityFound=true;
                 break;
@@ -38,71 +35,48 @@ public class NextPermutation {
         }
 
         if(!isNextProbablityFound){
-            Arrays.sort(nums);
+            sortRightSubarray(nums,-1);
         }
 
         // System.out.println(Arrays.toString(nums));
         
     }
 
-    //sort the right subarray
+    //sort the right subarray to ascending order
     public void sortRightSubarray(int nums[], int imbalanceIndex){
-        int temp;
-        int j;
+        //as the right subarray is already in descending order
+        //we just need to reverse the order to get the ascending order
+        int i=imbalanceIndex+1;
+        int j=nums.length-1;
 
-        //perform insertion sort
-        for(int i=imbalanceIndex+2;i<nums.length;i++){
-            temp=nums[i];
-            j=i;
-            while(j>imbalanceIndex+1 && nums[j-1]>temp){
-                nums[j]=nums[j-1];
-                j--;
-            }
-            nums[j]=temp;
+        while(i<j){
+            nums[i]+=nums[j];
+            nums[j]=nums[i]-nums[j];
+            nums[i]-=nums[j];
+            i++;
+            j--;
         }
     }
 
     //finds the index of smallest value which is greater than the value at imbalance and then swap it 
-    public int swapValueGreaterThanGivenValue(int nums[], int imbalanceIndex){
+    public void swapValueGreaterThanGivenValue(int nums[], int imbalanceIndex){
         int temp=nums[imbalanceIndex];
+        int maxIndex=-1;
 
-        //as the right subarray is sorted in ascending order
+        //as the right subarray is sorted in descending order
         for(int i=imbalanceIndex+1;i<nums.length;i++){
             if(nums[i]>temp){
-                nums[imbalanceIndex]=nums[i];
-                nums[i]=temp;
-                return i;
+                maxIndex=i;
+            }
+            else if(nums[i]<temp){
+                break;
             }
         }
-        return imbalanceIndex+1;
-    }
 
-    //balance the right subarray from particular position
-    public void balanceRightSubarray(int nums[], int imbalanceIndex, int position){
-        int temp;
-        int i;
-
-        //if there is imbalance towards the left
-        if(position > imbalanceIndex+1 && position < nums.length-1 && nums[position]<nums[position-1]){
-            temp=nums[position];
-            i=position;
-
-            while(i>imbalanceIndex+1 && nums[i-1]>temp){
-                nums[i]=nums[i-1];
-                i--;
-            }
-            nums[i]=temp;
-        }
-
-        if(position > imbalanceIndex+1 && position < nums.length-1 && nums[position]>nums[position+1]){
-            temp=nums[position];
-            i=position;
-
-            while(i<nums.length-1 && temp>nums[i+1]){
-                nums[i]=nums[i+1];
-                i++;
-            }
-            nums[i]=temp;
+        if(maxIndex>-1){
+            nums[imbalanceIndex]=nums[maxIndex];
+            nums[maxIndex]=temp;
         }
     }
+        
 }
