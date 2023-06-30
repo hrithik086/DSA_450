@@ -16,8 +16,8 @@ public class BestTimeToBuyAndSellStocks2{
         int initialBalance,initialStockBalance;
         int afterSellBalance,afterBuyStockBalance;
         
-        //0 index represents my balance with one stock with me
-        //1 index represents my balace with no stocks with me (concider this as you wallet)
+        //0 index represents my balance with one stock with me (bought state)
+        //1 index represents my balace with no stocks with me (concider this as you wallet) (sold state)
         //no stocks means the stock which i might have bought earlier i have sold them and this is the balance after selling
         //here i have initialized the first row of the table i buyied 1 stock initially
         matr[0][0]=0-prices[0];
@@ -25,21 +25,30 @@ public class BestTimeToBuyAndSellStocks2{
 
         for(int i=1;i<prices.length;i++){
             //now here i have four option for each day
+
+            //as a bought state i have two options
             //hold the old stock here. hold means neither we buy new stock nor we sell old stock here
             initialStockBalance=matr[i-1][0];
+
+            //sell the old stock here forget about the old wallet balance here
+            //this means rather than selling stock before this day you will sell the stock you hell till now here.
+            afterSellBalance=initialStockBalance+prices[i]-fee;
+
+            //as sold state i have two options
+            //dont buy new stock here
             initialBalance=matr[i-1][1];
+
 
             //Forget about the old stock buy a new stock with balance amount you have in your wallet
             //this means you sold all your all stock before this day and now you are buying a new stock from the balance you have
             //-ve value represents we are havin a loan of that value
             afterBuyStockBalance=initialBalance-prices[i];
 
-
-            //sell the old stock here forget about the old wallet balance here
-            //this means rather than selling stock before this day you will sell the stock you hell till now here.
-            afterSellBalance=initialStockBalance+prices[i]-fee;
-
+            
+            //we need to have maxBalance in buy state
             matr[i][0]=Math.max(initialStockBalance,afterBuyStockBalance);
+
+            //we need to have maxBalance in sold state
             matr[i][1]=Math.max(initialBalance,afterSellBalance);
         }
 
