@@ -13,8 +13,8 @@ public class LargestRectangleInHistogram{
     }
 
     public int largestRectangleArea(int[] heights) {
-        int lli[] = this.leftLimitIndexArray(heights);
-        int rli[] = this.rightLimitIndexArray(heights);
+        int lli[] = this.leftLimitIndexArray(heights); //function to calculate the left smallest index of the array
+        int rli[] = this.rightLimitIndexArray(heights);//function to calculate the right smallest index of the array
         // System.out.println(Arrays.toString(lli));
         // System.out.println(Arrays.toString(rli));
         int max = Integer.MIN_VALUE;
@@ -29,6 +29,7 @@ public class LargestRectangleInHistogram{
         return max;
     }
 
+    //Calculate left smallest element of the array
     public int[] leftLimitIndexArray(int[] heights){
         Stack<Integer> stack=new Stack<Integer>();
         int[] lli = new int[heights.length];
@@ -55,6 +56,7 @@ public class LargestRectangleInHistogram{
         return lli;
     }
 
+    //calculate right smallest element in the array
     public int[] rightLimitIndexArray(int[] heights){
         int rli[]=new int[heights.length];
         Stack<Integer> stack = new Stack<Integer>();
