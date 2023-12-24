@@ -1,3 +1,9 @@
+/*
+ * Question link - https://www.geeksforgeeks.org/find-a-specific-pair-in-matrix/
+ * Explanation Video link1 - https://www.youtube.com/watch?v=nK1HtsulAvc&ab_channel=BinaryBuddies
+ * Explanation Video link2 - https://www.youtube.com/watch?v=aUhR_T5J9is&ab_channel=NULL 
+ */
+
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
@@ -12,7 +18,7 @@ public class SpecificPairInMatrix {
                         { 0, -4, 10, -5, 1 }
                     };
 
-        System.out.println(findMaxDiff(mat));
+        System.out.println(maxDiff(mat));
     }
 
     //this is my approach
@@ -59,6 +65,32 @@ public class SpecificPairInMatrix {
             }
         }
         
+
+        return max;
+    }
+
+    //optimized approach
+    public static int maxDiff(int mat[][]){
+        //this will store the max element in a sub square matrix
+        int preComputeMat[][] = new int[mat.length][mat[0].length];
+        int max = Integer.MIN_VALUE;
+        int right, bottom, diagonal;
+
+        for(int i=mat.length-1; i>0; i--){
+            for(int j=mat[0].length-1; j>0; j--){
+                //calculate the highest element in the submatrix
+                //compare the the present element from max element of right SubSquareMatrix, bottom SubSquareMatix and DiagonalSubSquareMatrix
+                right = j < mat[0].length-1 ? preComputeMat[i][j+1] : Integer.MIN_VALUE;
+                bottom = i < mat.length-1 ? preComputeMat[i+1][j] : Integer.MIN_VALUE;
+                diagonal = j < mat[0].length-1 && i < mat.length-1 ? preComputeMat[i+1][j+1] : Integer.MIN_VALUE; 
+                preComputeMat[i][j] = Math.max(mat[i][j], Math.max(right, Math.max(bottom, diagonal)));
+
+                //the element at i,j position of preComputeMat is the highest element from sub square matrix for the 
+                //element present in the i-1,j-1 position of mat
+                //we can subtract and check the max difference
+                max = Math.max(max, preComputeMat[i][j]-mat[i-1][j-1]);
+            }
+        }
 
         return max;
     }
