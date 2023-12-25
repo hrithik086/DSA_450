@@ -1,5 +1,6 @@
 /*
  * Question link - https://www.geeksforgeeks.org/rotate-a-matrix-by-90-degree-in-clockwise-direction-without-using-any-extra-space/
+ * Explanation video link - https://www.youtube.com/watch?v=Z0R2u6gd3GU&ab_channel=takeUforward
  */
 
 import java.util.Arrays;
@@ -21,7 +22,10 @@ public class RotateMatrixBy90Degree {
             {16,17,18,19,20},
             {21,22,23,24,25}
         };
-        rotateBy90Degree(mat);
+
+        // rotateBy90Degree(mat);
+        rotate90Degree(mat);
+
         Arrays.stream(mat).forEach(arr -> System.out.println(Arrays.toString(arr)));
     }
 
@@ -69,5 +73,45 @@ public class RotateMatrixBy90Degree {
                 mat[i][j]=temp1;
             }
         }
+    }
+
+    //optimized approach
+    //basic idea of this approach is transpose the matrix and then reverse rows or columns of the matrix based on the condition
+    public static void rotate90Degree(int mat[][]){
+        transposeMatrix(mat);
+        //for clock wise 90 degree rotation after transpose reverse each row
+        //for anti clock wise 90 degree rotation after transpose reverse each column
+        reverseEachRowOfMatrix(mat);
+        // reverseEachColumnOfMatrix(mat);
+    }
+
+    public static void transposeMatrix(int mat[][]){
+        for(int i=0; i<mat.length; i++){
+            for(int j=i+1; j<mat.length; j++){
+                swap(mat,i,j,j,i);
+            }
+        }
+    }
+
+    public static void reverseEachRowOfMatrix(int mat[][]){
+        for(int i=0; i<mat.length; i++){
+            for(int j=0; j<mat.length/2; j++){
+                swap(mat,i,j,i,mat.length-1-j);
+            }
+        }
+    }
+
+    public static void reverseEachColumnOfMatrix(int mat[][]){
+        for(int j=0; j<mat.length; j++){
+            for(int i=0; i<mat.length/2; i++){
+                swap(mat, i, j, mat.length-1-i, j);
+            }
+        }
+    }
+
+    public static void swap(int mat[][], int i1, int j1, int i2, int j2){
+        mat[i1][j1]+=mat[i2][j2];
+        mat[i2][j2]=mat[i1][j1]-mat[i2][j2];
+        mat[i1][j1]=mat[i1][j1]-mat[i2][j2];
     }
 }
