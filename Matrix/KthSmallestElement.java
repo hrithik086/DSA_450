@@ -8,33 +8,146 @@ import java.util.LinkedList;
 
 public class KthSmallestElement {
     public static void main(String args[]){
-        // int arr[] = {8,3,4,2,0,0,3,9,0,9};
-        // // int arr[] = {2};
-        // LinkedList<Integer> linkedList = new LinkedList<Integer>();
-        // int i=0;
-        
-        // for(int item : arr){
-        //     if(i<5){
-        //         binarySearchAndAdd(linkedList, item, true);
-        //         i++;
-        //     }
-        //     else{
-        //         binarySearchAndAdd(linkedList, item, false);
-        //     }
-        // }
-
-        // // System.out.println(binarySearch(linkedList, 3));
-        // System.out.println(linkedList);
-
         int mat[][] = {{16, 28, 60, 64},
                         {22, 41, 63, 91},
                         {27, 50, 87, 93},
                         {36, 78, 87, 94 }
                     };
-        System.out.println(kthSmallest(mat, mat.length, 3));
+        // System.out.println(kthSmallest(mat, mat.length, 3));
+        System.out.println(kthSmallestElement(mat, 3));
 
     }
 
+
+    public static int kthSmallestElement(int mat[][], int k){
+        ArrayList<Integer> minHeap = new ArrayList<Integer>();
+        int kthMinElement = 0;
+        
+        for(int i=0;i<mat.length;i++){
+            for(int j=0;j<mat[0].length;j++){
+                minHeap.add(mat[i][j]);
+                buildMinHeap(minHeap);
+            }
+        }
+
+        for(int i=0; i<k;i++){
+            kthMinElement = getMinElement(minHeap);
+        }
+
+        return kthMinElement;
+    }
+
+    public static void buildMinHeap(ArrayList<Integer> list){
+
+        if(list.size()==0){
+            return;
+        }
+
+        int currentIndex = list.size()-1;
+        int parentIndex = parentIndex(currentIndex);
+        int currentNodeValue = list.get(currentIndex);
+
+        while(parentIndex>=0 && list.get(parentIndex)>currentNodeValue){
+            swap(list, currentIndex, parentIndex);
+            currentIndex=parentIndex;
+            parentIndex=parentIndex(currentIndex);
+        }
+    }
+
+    public static int getMinElement(ArrayList<Integer> list){
+        if(list.size()==0){
+            return Integer.MAX_VALUE;
+        }
+
+        int min=list.get(0);
+        list.set(0, list.get(list.size()-1));
+        list.remove(list.size()-1);
+        if(list.size()>0){
+            heapify(list, 0);
+        }
+
+        return min;
+    }
+
+    public static void heapify(ArrayList<Integer> list, int index){
+        int parentIndex = index;
+        int leftChildIndex;
+        int rightChildIndex;
+
+        int parent;
+        int leftChild;
+        int rightChild;
+        
+        while(parentIndex<list.size()){
+            parent=list.get(parentIndex);
+            leftChildIndex = leftChildIndex(parentIndex);
+            rightChildIndex = rightChildIndex(parentIndex);
+
+            if(leftChildIndex < list.size() && rightChildIndex < list.size()){
+                leftChild = list.get(leftChildIndex);
+                rightChild = list.get(rightChildIndex);
+
+                if(leftChild <= rightChild){
+                    if(leftChild < parent){
+                        swap(list, leftChildIndex, parentIndex);
+                        parentIndex = leftChildIndex;
+                    }
+                    else{
+                        break;
+                    }
+                }
+                else{
+                    if(rightChild < parent){
+                        swap(list, rightChildIndex, parentIndex);
+                        parentIndex = rightChildIndex;
+                    }
+                    else{
+                        break;
+                    }
+                }
+            }
+            else if(leftChildIndex < list.size() && rightChildIndex == list.size()){
+                leftChild=list.get(leftChildIndex);
+                if(leftChild < parent){
+                    swap(list, leftChildIndex, parentIndex);
+                    parentIndex = leftChildIndex;
+                }
+            }
+            else{
+                break;
+            }
+        }
+    }
+
+    public static int parentIndex(int childIndex){
+        int parent;
+        if(childIndex%2 == 0){
+            parent = childIndex/2 -1;
+        }
+        else{
+            parent = childIndex/2;
+        }
+
+        return parent;
+    }
+
+    public static int leftChildIndex(int parentIndex){
+        return (2*parentIndex)+1;
+    }
+
+    public static int rightChildIndex(int parentIndex){
+        return (2*parentIndex)+2;
+    }
+
+    public static void swap(ArrayList<Integer> list, int index1, int index2){
+        list.set(index1, list.get(index1)+list.get(index2));
+        list.set(index2, list.get(index1)-list.get(index2));
+        list.set(index1, list.get(index1)-list.get(index2));
+    }
+
+
+
+    //-------------------------------------------------------------------------------------------------------
     //this is my approach we can still optimize this
     public static int kthSmallest(int[][]mat,int n,int k)
 	{
